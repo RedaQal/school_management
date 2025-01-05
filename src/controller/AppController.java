@@ -35,9 +35,13 @@ public class AppController {
                     break;
                 case 3 :
                      schoolClassController.manageSchoolClass();
+                     break;
+                case 4 :
+                    schoolController.schoolDetails();
+                    break;
                 default:
                     break;
             }
-        } while (entry != 4);
+        } while (entry != 5);
     }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import model.SchoolClass;
 import model.Student;
-import model.Teacher;
 
 public class SchoolClassView {
     public void displaySchoolClassMenu() {

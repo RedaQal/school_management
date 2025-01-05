@@ -7,6 +7,6 @@ public class AppView {
         System.out.println("2- manage teachers");
         System.out.println("3- manage classes");
         System.out.println("4- school details");
-        System.out.println("4- quite");
+        System.out.println("5- quite");
     }
 }
