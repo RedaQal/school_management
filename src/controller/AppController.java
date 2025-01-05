@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.Scanner;
+
+import database.DatabaseManager;
 import view.AppView;
 
 public class AppController {
@@ -19,6 +21,7 @@ public class AppController {
         schoolClassController = new SchoolClassController();
     }
     public void start(){
+        DatabaseManager.connect();
         int entry;
         do {
             view.displayMainMenu();
