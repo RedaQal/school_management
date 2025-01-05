@@ -11,8 +11,8 @@ public class StudentController {
     private StudentView view;
     private Scanner scanner;
 
-    public StudentController(School school) {
-        this.school = school;
+    public StudentController() {
+        this.school = School.getInstance();
         this.view = new StudentView();
         this.scanner = new Scanner(System.in);
     }

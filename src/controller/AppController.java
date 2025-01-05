@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.Scanner;
-
-import model.School;
 import view.AppView;
 
 public class AppController {
@@ -12,13 +10,13 @@ public class AppController {
     private StudentController studentController;
     private TeacherController teacherController;
     private SchoolClassController schoolClassController;
-    public AppController(School school){
+    public AppController(){
         this.view = new AppView();
         this.scanner = new Scanner(System.in);
-        schoolController = new SchoolController(school);
-        studentController = new StudentController(school);
-        teacherController = new TeacherController(school);
-        schoolClassController = new SchoolClassController(school);
+        schoolController = new SchoolController();
+        studentController = new StudentController();
+        teacherController = new TeacherController();
+        schoolClassController = new SchoolClassController();
     }
     public void start(){
         int entry;

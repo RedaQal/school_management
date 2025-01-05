@@ -7,8 +7,8 @@ public class SchoolController {
    private School school;
    private SchoolView view;
 
-   public SchoolController(School school) {
-      this.school = school;
+   public SchoolController() {
+      this.school = School.getInstance();
       this.view = new SchoolView();
    }
 

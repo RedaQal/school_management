@@ -13,8 +13,8 @@ public class SchoolClassController {
     private SchoolClassView view;
     private Scanner scanner;
 
-    SchoolClassController(School school){
-    this.school = school;
+    SchoolClassController(){
+    this.school = School.getInstance();
     this.view = new SchoolClassView();
     this.scanner = new Scanner(System.in);
     }
