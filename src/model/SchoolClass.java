@@ -15,6 +15,11 @@ public class SchoolClass {
         this.teacher = teacher;
         this.students = new ArrayList<Student>();
     }
+    public SchoolClass(String className , Teacher teacher ){
+        this.className = className;
+        this.teacher = teacher;
+        this.students = new ArrayList<Student>();
+    }
     public int getId() {
         return id;
     }
@@ -27,17 +32,14 @@ public class SchoolClass {
     public List<Student> getStudents() {
         return students;
     }
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
     public Teacher getTeacher() {
         return teacher;
-    }
-    public void addStudent(Student student){
-        this.students.add(student);
-    }
-    public void removeStudent(Student student){
-        this.students.remove(student);
     }
     public String toString(){
         return "Class : "+this.getClassName()+" teacher : "+this.getTeacher().getName();

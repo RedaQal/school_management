@@ -10,11 +10,13 @@ public class StudentController {
     private StudentView view;
     private Scanner scanner;
     private StudentDAO studentDAO;
+
     public StudentController() {
         this.studentDAO = new StudentDAO();
         this.view = new StudentView();
         this.scanner = new Scanner(System.in);
     }
+
     public void manageStudent() {
         int entry;
         do {
@@ -43,15 +45,24 @@ public class StudentController {
         } while (entry != 5);
     }
 
+    private void addStudent() {
+        System.out.print("Enter the student name :");
+        String name = scanner.nextLine();
+        System.out.print("Enter the student age :");
+        int age = scanner.nextInt();
+        Student student = new Student(name, age);
+        studentDAO.save(student);
+    }
+
     private void updateStudent() {
-        System.out.println("enter the student id :");
+        System.out.print("enter the student id :");
         int id = scanner.nextInt();
         scanner.nextLine();
         Student student = studentDAO.findById(id);
         if (student != null) {
-            System.out.println("enter the new name :");
+            System.out.print("enter the new name :");
             String name = scanner.nextLine();
-            System.out.println("enter the new age :");
+            System.out.print("enter the new age :");
             int age = scanner.nextInt();
             scanner.nextLine();
             student.setName(name);
@@ -63,23 +74,14 @@ public class StudentController {
         }
     }
 
-    private void addStudent() {
-        System.out.print("Enter the student name :");
-        String name = scanner.nextLine();
-        System.out.print("Enter the student age :");
-        int age = scanner.nextInt();
-        Student student = new Student(name, age);
-        studentDAO.save(student);
-    }
-
     private void deleteStudent() {
-        System.out.println("Enter the student Id :");
+        System.out.print("Enter the student Id :");
         int id = scanner.nextInt();
         Student student = studentDAO.findById(id);
         if (student != null) {
             studentDAO.delete(student.getId());
             System.out.println("student deleted successfully");
-        }else{
+        } else {
             System.out.println("student unfound");
         }
     }

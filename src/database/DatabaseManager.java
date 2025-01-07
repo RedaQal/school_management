@@ -10,7 +10,10 @@ public class DatabaseManager {
 
     public static Connection connect() {
         try {
-            return DriverManager.getConnection(DATABASE_URL);
+            Connection connection =  DriverManager.getConnection(DATABASE_URL);
+            Statement statement = connection.createStatement();
+            statement.execute("PRAGMA foreign_keys = ON;");
+            return connection;
         } catch (SQLException e) {
             System.err.println("database connection error : " + e.getMessage());
             return null;
@@ -36,11 +39,11 @@ public class DatabaseManager {
                     """;
             statement.execute(createTeachersTable);
             String createClassesTable = """
-                    CREATE TABLE IF NOT EXISTS teachers (
+                    CREATE TABLE IF NOT EXISTS classes (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
                         teacher_id INTEGER NOT NULL,
-                        FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+                        FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE RESTRICT
                     )
                     """;
             statement.execute(createClassesTable);
