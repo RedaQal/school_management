@@ -14,8 +14,13 @@ public class TeacherView {
         System.out.println("5- quite");
     }
     public void displayTeachers(List<Teacher> teachers){
-        for(Teacher t : teachers){
-            System.out.println(t);
+       if (teachers.isEmpty()) {
+            System.out.println("There is no teachers");
+        } else {
+            System.out.println("-------Teachers List-------");
+            for (Teacher s : teachers) {
+                System.out.println(s);
+            }
         }
     }
 }

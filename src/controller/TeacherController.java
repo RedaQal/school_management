@@ -2,17 +2,17 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import dao.TeacherDAO;
 import model.Teacher;
 import view.TeacherView;
 
 public class TeacherController {
-    private School school;
+    private TeacherDAO teacherDAO;
     private TeacherView view;
     private Scanner scanner;
 
     public TeacherController() {
-        this.school = School.getInstance();
+        this.teacherDAO = new TeacherDAO();
         this.view = new TeacherView();
         this.scanner = new Scanner(System.in);
     }
@@ -34,7 +34,7 @@ public class TeacherController {
                     deleteTeacher();
                     break;
                 case 4:
-                    view.displayTeachers(school.getTeachers());
+                    view.displayTeachers(teacherDAO.findAll());
                     break;
                 case 5:
                     System.out.println("quite");
@@ -46,43 +46,39 @@ public class TeacherController {
     }
 
     private void addTeacher() {
-        System.out.println("Enter the Teacher Id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter the Teacher name :");
+        System.out.print("Enter the Teacher name :");
         String name = scanner.nextLine();
-        System.out.println("Enter the Teacher subject :");
+        System.out.print("Enter the Teacher subject :");
         String subject = scanner.nextLine();
-        Teacher teacher = new Teacher(id, name, subject);
-        school.addTeacher(teacher);
+        Teacher teacher = new Teacher(name, subject);
+        teacherDAO.save(teacher);
     }
     private void updateTeacher() {
-        System.out.println("enter the Teacher id :");
+        System.out.print("enter the Teacher id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Teacher teacher = school.getTeachers().stream().filter(T -> T.getId() == id).findFirst().orElse(null);
+        Teacher teacher = teacherDAO.findById(id);
         if (teacher != null) {
-            System.out.println("enter the new name :");
+            System.out.print("enter the new name :");
             String name = scanner.nextLine();
-            System.out.println("enter the new subject :");
+            System.out.print("enter the new subject :");
             String subject = scanner.nextLine();
-            scanner.nextLine();
             teacher.setName(name);
             teacher.setSubject(subject);
+            teacherDAO.update(teacher);
             System.out.println("Teacher updated successfully");
         } else {
             System.out.println("Teacher unfound");
         }
     }
     private void deleteTeacher() {
-        System.out.println("Enter the Teacher Id :");
+        System.out.print("Enter the Teacher Id :");
         int id = scanner.nextInt();
-        for (Teacher T : school.getTeachers()) {
-            if (T.getId() == id) {
-                school.deleteTeacher(T);
-                System.out.println("Teacher deleted successfully");
-                break;
-            }
+        Teacher teacher = teacherDAO.findById(id);
+        if (teacher != null) {
+            teacherDAO.delete(teacher.getId());
+        }else{
+            System.out.println("teacher unfound ");
         }
     }
 }

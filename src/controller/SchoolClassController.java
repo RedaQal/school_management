@@ -2,22 +2,29 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import dao.SchoolClassDAO;
+import dao.StudentDAO;
+import dao.TeacherDAO;
 import model.SchoolClass;
 import model.Student;
 import model.Teacher;
 import view.SchoolClassView;
 
 public class SchoolClassController {
-    private School school;
+    private TeacherDAO teacherDAO;
+    private SchoolClassDAO schoolClassDAO;
+    private StudentDAO studentDAO;
     private SchoolClassView view;
     private Scanner scanner;
 
-    SchoolClassController(){
-    this.school = School.getInstance();
-    this.view = new SchoolClassView();
-    this.scanner = new Scanner(System.in);
+    SchoolClassController() {
+        this.view = new SchoolClassView();
+        this.scanner = new Scanner(System.in);
+        this.schoolClassDAO = new SchoolClassDAO();
+        this.teacherDAO = new TeacherDAO();
+        this.studentDAO = new StudentDAO();
     }
+
     public void manageSchoolClass() {
         int entry;
         do {
@@ -26,25 +33,25 @@ public class SchoolClassController {
             scanner.nextLine();
             switch (entry) {
                 case 1:
-                addSchoolClass();
+                    addSchoolClass();
                     break;
                 case 2:
-                updateSchoolClass();
+                    updateSchoolClass();
                     break;
                 case 3:
-                deleteSchoolClass();
+                    deleteSchoolClass();
                     break;
                 case 4:
-                addStudentToClass();
+                    addStudentToClass();
                     break;
                 case 5:
-                deleteStudentFromClass();
+                    deleteStudentFromClass();
                     break;
                 case 6:
-                displayClassStudents();
+                    displayClassStudents();
                     break;
                 case 7:
-                    view.displaySchoolClasses(school.getClasses());
+                    view.displaySchoolClasses(schoolClassDAO.findAll());
                     break;
                 case 8:
                     System.out.println("quite");
@@ -54,97 +61,93 @@ public class SchoolClassController {
             }
         } while (entry != 8);
     }
-    private Teacher findTeacher(int id){
-        Teacher teacher = school.getTeachers().stream().filter( t -> t.getId() == id).findFirst().orElse(null);
-        return teacher;
-        
-    }
+
     private void addSchoolClass() {
-        System.out.println("Enter the Class Id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter the Class name :");
+        System.out.print("Enter the Class name :");
         String name = scanner.nextLine();
-        System.out.println("Enter the Class teacher id :");
+        System.out.print("Enter the Class teacher id :");
         int teacherId = scanner.nextInt();
         scanner.nextLine();
-        Teacher teacher = findTeacher(teacherId);
-        SchoolClass schoolClass = new SchoolClass(id, name ,teacher );
-        school.addSchoolClass(schoolClass);
+        Teacher teacher = teacherDAO.findById(teacherId);
+        if (teacher != null) {
+            SchoolClass schoolClass = new SchoolClass(name, teacher);
+            schoolClassDAO.save(schoolClass);
+            System.out.println("class added successfully");
+        }else{
+            System.out.println("teacher not found");
+        }
     }
+
     private void updateSchoolClass() {
-        System.out.println("enter the class id :");
+        System.out.print("enter the class id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        SchoolClass schoolClass = school.getClasses().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
+        SchoolClass schoolClass = schoolClassDAO.findById(id);
         if (schoolClass != null) {
-            System.out.println("enter the new class name :");
+            System.out.print("enter the new class name :");
             String name = scanner.nextLine();
-            System.out.println("enter the new teacher id :");
+            System.out.print("enter the new teacher id :");
             int teacherId = scanner.nextInt();
             scanner.nextLine();
-            Teacher teacher = findTeacher(teacherId);
+            Teacher teacher = teacherDAO.findById(teacherId);
             schoolClass.setClassName(name);
             schoolClass.setTeacher(teacher);
+            schoolClassDAO.update(schoolClass);
             System.out.println("The class is updated successfully");
         } else {
             System.out.println("class not found");
         }
     }
+
     private void deleteSchoolClass() {
-        System.out.println("Enter the class Id :");
+        System.out.print("Enter the class Id :");
         int id = scanner.nextInt();
-        for (SchoolClass c : school.getClasses()) {
-            if (c.getId() == id) {
-                school.deleteSchoolClass(c);
-                System.out.println("class deleted successfully");
-                break;
-            }
+        SchoolClass schoolClass = schoolClassDAO.findById(id);
+        if (schoolClass != null) {
+            schoolClassDAO.delete(schoolClass.getId());
+            System.out.println("class is deleted successfully");
+        }else{
+            System.out.println("class not found");
         }
     }
-    private SchoolClass getSchoolClasses(int id){
-        SchoolClass schoolClass = school.getClasses().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
-        return schoolClass;
-    }
-    private Student getStudent(int id){
-        Student student = school.getStudents().stream().filter(s -> s.getId() == id).findFirst().orElse(null);
-        return student;
-    }
-    private void addStudentToClass(){
-        System.out.println("Enter the class Id :");
+    private void addStudentToClass() {
+        System.out.print("Enter the class Id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("Enter the Student Id :");
+        System.out.print("Enter the Student Id :");
         int studentId = scanner.nextInt();
-        SchoolClass schoolClass = getSchoolClasses(id);
-        Student student = getStudent(studentId);
-        if (student != null && schoolClass != null) {          
-            schoolClass.addStudent(student);
+        SchoolClass schoolClass = schoolClassDAO.findById(id);
+        Student student = studentDAO.findById(studentId);
+        if (student != null && schoolClass != null) {
+            schoolClassDAO.addStudentToClass(student, schoolClass);
             System.out.println("student added to class successfully");
-        }else{
+        } else {
             System.out.println("class or student not found");
         }
     }
-    private void deleteStudentFromClass(){
-        System.out.println("Enter the class Id :");
+
+    private void deleteStudentFromClass() {
+        System.out.print("Enter the class Id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("Enter the Student Id :");
+        System.out.print("Enter the Student Id :");
         int studentId = scanner.nextInt();
-        SchoolClass schoolClass = getSchoolClasses(id);
-        Student student = getStudent(studentId);
-        if (student != null && schoolClass != null) {          
-            schoolClass.removeStudent(student);
+        SchoolClass schoolClass = schoolClassDAO.findById(id);
+        Student student = studentDAO.findById(studentId);
+        if (student != null && schoolClass != null) {
+            schoolClassDAO.deleteStudentFromClass(student, schoolClass);
             System.out.println("student removed from the class successfully");
-        }else{
+        } else {
             System.out.println("class or student are not found");
         }
     }
-    private void displayClassStudents(){
-        System.out.println("Enter the class Id :");
+
+    private void displayClassStudents() {
+        System.out.print("Enter the class Id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        SchoolClass schoolClass = getSchoolClasses(id);
-        view.displayClassStudents(schoolClass.getStudents());
+        SchoolClass schoolClass = schoolClassDAO.findById(id);
+        schoolClass = schoolClassDAO.findStudentsOfClass(schoolClass);
+        view.displayClassStudents(schoolClass);
     }
 }
