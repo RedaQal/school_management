@@ -10,6 +10,10 @@ public class Student {
         this.name = name;
         this.age = age;
     }
+    public Student(String name, int age){
+        this.name = name;
+        this.age = age;
+    }
     public String getName(){
         return this.name;
     }

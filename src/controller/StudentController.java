@@ -2,21 +2,19 @@ package controller;
 
 import java.util.Scanner;
 
-import model.School;
+import dao.StudentDAO;
 import model.Student;
 import view.StudentView;
 
 public class StudentController {
-    private School school;
     private StudentView view;
     private Scanner scanner;
-
+    private StudentDAO studentDAO;
     public StudentController() {
-        this.school = School.getInstance();
+        this.studentDAO = new StudentDAO();
         this.view = new StudentView();
         this.scanner = new Scanner(System.in);
     }
-
     public void manageStudent() {
         int entry;
         do {
@@ -32,8 +30,9 @@ public class StudentController {
                     break;
                 case 3:
                     deleteStudent();
+                    break;
                 case 4:
-                    view.displayStudents(school);
+                    view.displayStudents(studentDAO.findAll());
                     break;
                 case 5:
                     System.out.println("quite");
@@ -48,7 +47,7 @@ public class StudentController {
         System.out.println("enter the student id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Student student = school.getStudents().stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+        Student student = studentDAO.findById(id);
         if (student != null) {
             System.out.println("enter the new name :");
             String name = scanner.nextLine();
@@ -57,6 +56,7 @@ public class StudentController {
             scanner.nextLine();
             student.setName(name);
             student.setAge(age);
+            studentDAO.update(student);
             System.out.println("student updated successfully");
         } else {
             System.out.println("student unfound");
@@ -64,25 +64,23 @@ public class StudentController {
     }
 
     private void addStudent() {
-        System.out.println("Enter the Student Id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter the student name :");
+        System.out.print("Enter the student name :");
         String name = scanner.nextLine();
-        System.out.println("Enter the student age :");
+        System.out.print("Enter the student age :");
         int age = scanner.nextInt();
-        Student student1 = new Student(id, name, age);
-        school.addStudent(student1);
+        Student student = new Student(name, age);
+        studentDAO.save(student);
     }
 
     private void deleteStudent() {
         System.out.println("Enter the student Id :");
         int id = scanner.nextInt();
-        for (Student s : school.getStudents()) {
-            if (s.getId() == id) {
-                school.deleteStudent(s);
-                break;
-            }
+        Student student = studentDAO.findById(id);
+        if (student != null) {
+            studentDAO.delete(student.getId());
+            System.out.println("student deleted successfully");
+        }else{
+            System.out.println("student unfound");
         }
     }
 }

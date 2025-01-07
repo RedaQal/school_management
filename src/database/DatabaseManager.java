@@ -10,7 +10,6 @@ public class DatabaseManager {
 
     public static Connection connect() {
         try {
-            System.out.println("trying connection to database");
             return DriverManager.getConnection(DATABASE_URL);
         } catch (SQLException e) {
             System.err.println("database connection error : " + e.getMessage());
@@ -18,7 +17,7 @@ public class DatabaseManager {
         }
     }
 
-    public void initializeDatabase() {
+    public static void initializeDatabase() {
         try (Connection connection = connect(); Statement statement = connection.createStatement()) {
             String createStudentsTable = """
                     CREATE TABLE IF NOT EXISTS students (
@@ -47,7 +46,7 @@ public class DatabaseManager {
             statement.execute(createClassesTable);
             String createStudentClassTable = """
                     CREATE TABLE IF NOT EXISTS student_classes (
-                        student_id INTEGER NOT NUL,
+                        student_id INTEGER NOT NULL,
                         class_id INTEGER NOT NULL,
                         PRIMARY KEY(student_id,class_id),
                         FOREIGN KEY (student_id) REFERENCES students(id),
