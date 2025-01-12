@@ -7,7 +7,7 @@ import model.Student;
 
 public class SchoolClassView {
     public void displaySchoolClassMenu() {
-        System.out.println("|-------Student Menu-------|");
+        System.out.println("|-------Classes Menu-------|");
         System.out.println("1- add a class");
         System.out.println("2- update class");
         System.out.println("3- delete class");
@@ -19,14 +19,25 @@ public class SchoolClassView {
     }
 
     public void displaySchoolClasses(List<SchoolClass> classes) {
-        for (SchoolClass c : classes) {
-            System.out.println(c);
+        if (!classes.isEmpty()) {
+            System.out.println("|-------Class List-------|");
+            for (SchoolClass c : classes) {
+                System.out.println(c);
+            }
+        } else {
+            System.out.println("There is no class");
         }
     }
 
-    public void displayClassStudents(List<Student> students) {
-        for (Student s : students) {
-            System.out.println(s);
+    public void displayClassStudents(SchoolClass schoolClass) {
+        if (!schoolClass.getStudents().isEmpty()) {
+            System.out.println(schoolClass);
+            System.out.println("##########Students List##########");
+            for (Student s : schoolClass.getStudents()) {
+                System.out.println(s);
+            }
+        } else {
+            System.out.println("There is no student in this class");
         }
     }
 }

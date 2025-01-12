@@ -17,6 +17,11 @@ public class StudentController {
         this.scanner = new Scanner(System.in);
     }
 
+    private Student findStudent(int id) {
+        Student student = school.getStudents().stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+        return student;
+    }
+
     public void manageStudent() {
         int entry;
         do {
@@ -32,23 +37,41 @@ public class StudentController {
                     break;
                 case 3:
                     deleteStudent();
+                    break;
                 case 4:
-                    view.displayStudents(school);
+                    view.displayStudents(school.getStudents());
                     break;
                 case 5:
-                    System.out.println("quite");
                     break;
                 default:
+                    System.out.println("Please choose a valid option");
                     break;
             }
         } while (entry != 5);
+    }
+
+    private void addStudent() {
+        System.out.println("Enter the Student Id :");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        if (findStudent(id) != null) {
+            System.out.println("A student with this Id already exists");
+            return;
+        }
+        System.out.println("Enter the student name :");
+        String name = scanner.nextLine();
+        System.out.println("Enter the student age :");
+        int age = scanner.nextInt();
+        Student student = new Student(id, name, age);
+        school.addStudent(student);
+        System.out.println("student added successfuly");
     }
 
     private void updateStudent() {
         System.out.println("enter the student id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Student student = school.getStudents().stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+        Student student = findStudent(id);
         if (student != null) {
             System.out.println("enter the new name :");
             String name = scanner.nextLine();
@@ -59,30 +82,23 @@ public class StudentController {
             student.setAge(age);
             System.out.println("student updated successfully");
         } else {
-            System.out.println("student unfound");
+            System.out.println("Student not found");
         }
-    }
-
-    private void addStudent() {
-        System.out.println("Enter the Student Id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter the student name :");
-        String name = scanner.nextLine();
-        System.out.println("Enter the student age :");
-        int age = scanner.nextInt();
-        Student student1 = new Student(id, name, age);
-        school.addStudent(student1);
     }
 
     private void deleteStudent() {
-        System.out.println("Enter the student Id :");
+        System.out.print("Enter the Student Id : ");
         int id = scanner.nextInt();
-        for (Student s : school.getStudents()) {
-            if (s.getId() == id) {
-                school.deleteStudent(s);
-                break;
-            }
+        scanner.nextLine();
+
+        Student studentToRemove = findStudent(id);
+
+        if (studentToRemove != null) {
+            school.deleteStudent(studentToRemove);
+            System.out.println("Student deleted successfully");
+        } else {
+            System.out.println("Student not found");
         }
     }
+
 }

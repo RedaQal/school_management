@@ -17,6 +17,12 @@ public class TeacherController {
         this.scanner = new Scanner(System.in);
     }
 
+    private Teacher findTeacher(int id) {
+        Teacher teacher = school.getTeachers().stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+        return teacher;
+
+    }
+
     public void manageTeacher() {
         int entry;
         do {
@@ -37,9 +43,9 @@ public class TeacherController {
                     view.displayTeachers(school.getTeachers());
                     break;
                 case 5:
-                    System.out.println("quite");
                     break;
                 default:
+                    System.out.println("Please choose a valid option");
                     break;
             }
         } while (entry != 5);
@@ -49,24 +55,29 @@ public class TeacherController {
         System.out.println("Enter the Teacher Id :");
         int id = scanner.nextInt();
         scanner.nextLine();
+        if (findTeacher(id) != null) {
+            System.out.println("A teacher with this Id already exists");
+            return;
+        }
         System.out.println("Enter the Teacher name :");
         String name = scanner.nextLine();
         System.out.println("Enter the Teacher subject :");
         String subject = scanner.nextLine();
         Teacher teacher = new Teacher(id, name, subject);
         school.addTeacher(teacher);
+        System.out.println("Teacher added successfully");
     }
+
     private void updateTeacher() {
         System.out.println("enter the Teacher id :");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Teacher teacher = school.getTeachers().stream().filter(T -> T.getId() == id).findFirst().orElse(null);
+        Teacher teacher = findTeacher(id);
         if (teacher != null) {
             System.out.println("enter the new name :");
             String name = scanner.nextLine();
             System.out.println("enter the new subject :");
             String subject = scanner.nextLine();
-            scanner.nextLine();
             teacher.setName(name);
             teacher.setSubject(subject);
             System.out.println("Teacher updated successfully");
@@ -74,15 +85,18 @@ public class TeacherController {
             System.out.println("Teacher unfound");
         }
     }
+
     private void deleteTeacher() {
-        System.out.println("Enter the Teacher Id :");
+        System.out.print("Enter the Teacher Id : ");
         int id = scanner.nextInt();
-        for (Teacher T : school.getTeachers()) {
-            if (T.getId() == id) {
-                school.deleteTeacher(T);
-                System.out.println("Teacher deleted successfully");
-                break;
-            }
+        scanner.nextLine();
+        Teacher teacherToremove = findTeacher(id);
+        if (teacherToremove != null) {
+            school.deleteTeacher(teacherToremove);
+            System.out.println("Teacher deleted successfully");
+        } else {
+            System.out.println("Teacher not found");
         }
     }
+
 }
