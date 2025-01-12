@@ -1,60 +1,84 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import school.School;
+import school.SchoolClass;
+import school.Student;
+import school.Teacher;
 
 public class App {
-    static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Student> students = new ArrayList<>();
-
     public static void main(String[] args) throws Exception {
-        int entry;
-        do {
-            System.out.println("1- add a student");
-            System.out.println("2- show students");
-            System.out.println("3- delete student");
-            System.out.println("4- quitte");
-            entry = scanner.nextInt();
-            scanner.nextLine();
-            switch (entry) {
-                case 1:
-                    addStudent();
-                    break;
-                case 2:
-                    showStudents();
-                    break;
-                case 3:
-                    deleteStudent();
-                default:
-                    break;
-            }
-        } while (entry != 4);
-    }
+        // Créer une nouvelle instance de la classe School (École)
+        School school = new School();
 
-    private static void addStudent() {
-        System.out.println("Enter the Student Id :");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter the student name :");
-        String name = scanner.nextLine();
-        System.out.println("Enter the student age :");
-        int age = scanner.nextInt();
-        Student student1 = new Student(id, name, age);
-        students.add(student1);
-    }
+        // Créer de nouveaux étudiants
+        Student student1 = new Student("Reda QALQOL", 21);
+        Student student2 = new Student("Abdel KOBBI", 25);
 
-    private static void showStudents() {
-        for (Student s : students) {
-            System.out.println(s);
-        }
-    }
+        // Ajouter les étudiants à l'école
+        school.addStudent(student1);
+        school.addStudent(student2);
 
-    private static void deleteStudent() {
-        System.out.println("Enter the student Id :");
-        int id = scanner.nextInt();
-        for (Student s : students) {
-            if (s.getId() == id) {
-                students.remove(s);
-                break;
-            }
-        }
+        // Créer de nouveaux enseignants
+        Teacher teacher = new Teacher("Mohammed QALQOL", "Informatique");
+
+        // Ajouter les enseignants à l'école
+        school.addTeacher(teacher);
+
+        // Créer de nouvelles classes avec un nom et un enseignant
+        SchoolClass classeMath = new SchoolClass("algo", teacher);
+
+        classeMath.addStudent(student1);
+        classeMath.addStudent(student2);
+
+        school.addSchoolClass(classeMath);
+
+        System.out.println("School info : ");
+        System.out.println("Total number of students : " + school.getStudents().size());
+        System.out.println("Total number of teachers : " + school.getTeachers().size());
+        System.out.println("Total number of classes : " + school.getClasses().size());
+        System.out.println();
+
+        System.out.println("Class algo info :");
+        System.out.println("Class name : " + classeMath.getClassName());
+        System.out.println("Teacher : " + classeMath.getTeacher().getName());
+        System.out.println("Students number : " + classeMath.getStudents().size());
+        System.out.println();
+
+        school.deleteStudent(student1);
+        school.deleteSchoolClass(classeMath);
+
+        System.out.println("School Info after deleting a student and a class :");
+        System.out.println("Total number of students : " + school.getStudents().size());
+        System.out.println("Total number of teachers : " + school.getTeachers().size());
+        System.out.println("Total number of classes : " + school.getClasses().size());
+        System.out.println();
+        Student student3 = new Student("Sophie Martin", 20);
+        Student student4 = new Student("Jean Dupont", 21);
+        school.addStudent(student3);
+        school.addStudent(student4);
+
+        Teacher teacherEnglish = new Teacher("Barry Dukili", "Anglais");
+        Teacher teacherScience = new Teacher("Marie Curie", "Science");
+        school.addTeacher(teacherEnglish);
+        school.addTeacher(teacherScience);
+
+        SchoolClass classeEnglish = new SchoolClass("Anglais", teacherEnglish);
+        classeEnglish.addStudent(student3);
+        classeEnglish.addStudent(student4);
+        school.addSchoolClass(classeEnglish);
+
+        SchoolClass classeScience = new SchoolClass("Science", teacherScience);
+        classeScience.addStudent(student1);
+        school.addSchoolClass(classeScience);
+        System.out.println("School Info after adding students and two class :");
+        System.out.println("Total number of students : " + school.getStudents().size());
+        System.out.println("Total number of teachers : " + school.getTeachers().size());
+        System.out.println("Total number of classes : " + school.getClasses().size());
+
+        System.out.println("\nInformation about the English class:");
+        System.out.println("Teacher: " + classeEnglish.getTeacher().getName());
+        System.out.println("Number of students : " + classeEnglish.getStudents().size());
+
+        System.out.println("\nInformation about the Science class:");
+        System.out.println("Teacher: " + classeScience.getTeacher().getName());
+        System.out.println("Number of students : " + classeScience.getStudents().size());
     }
 }
