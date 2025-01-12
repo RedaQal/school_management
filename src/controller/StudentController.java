@@ -37,9 +37,9 @@ public class StudentController {
                     view.displayStudents(studentDAO.findAll());
                     break;
                 case 5:
-                    System.out.println("quite");
                     break;
                 default:
+                System.out.println("Please choose a valid option");
                     break;
             }
         } while (entry != 5);

@@ -54,9 +54,9 @@ public class SchoolClassController {
                     view.displaySchoolClasses(schoolClassDAO.findAll());
                     break;
                 case 8:
-                    System.out.println("quite");
-                    break;
+                break;
                 default:
+                System.out.println("Please choose a valid option");
                     break;
             }
         } while (entry != 8);

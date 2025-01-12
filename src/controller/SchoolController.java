@@ -1,21 +1,27 @@
 package controller;
 
-import model.School;
+import dao.SchoolClassDAO;
+import dao.StudentDAO;
+import dao.TeacherDAO;
 import view.SchoolView;
 
 public class SchoolController {
-   private School school;
+   private SchoolClassDAO schoolClassDAO;
+   private TeacherDAO teacherDAO;
+   private StudentDAO studentDAO;
    private SchoolView view;
 
    public SchoolController() {
-      this.school = School.getInstance();
+      this.studentDAO = new StudentDAO();
+      this.teacherDAO = new TeacherDAO();
+      this.schoolClassDAO = new SchoolClassDAO();
       this.view = new SchoolView();
    }
 
    public void schoolDetails() {
-      int studentNb = school.getStudents().size();
-      int teacherMb = school.getTeachers().size();
-      int classesNb = school.getClasses().size();
+      int studentNb = studentDAO.findAll().size();
+      int teacherMb = teacherDAO.findAll().size();
+      int classesNb = schoolClassDAO.findAll().size();
       view.displaySchoolDetails(studentNb,teacherMb,classesNb);
    }
 }
